@@ -307,9 +307,6 @@ Which generates following output:
 ```
 Hello World modified by InterceptorTwo modified by InterceptorOne
 ```
-## Implementation details
-- Information Provider
-- IL generation
 
 ## Roadmap
 - Support for non-interface public methods
