@@ -16,7 +16,7 @@ build_script:
 after_build:
   # For once the build has completed
 artifacts:
- - path: './src/Wraptor/bin/Release/netstandard2.0'
+ - path: './src/Wraptor/bin/Release/netstandard2.0/publish'
    name: Wraptor
 clone_depth: 1
 on_finish :
