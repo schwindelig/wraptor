@@ -1,8 +1,5 @@
 version: '0.0.{build}'
 image: Visual Studio 2017
-branches:
-  only:
-  - master
 init:
   - ps: git config --global core.autocrlf true
 install:
@@ -14,8 +11,8 @@ before_build:
   - ps: dotnet restore ./src/Wraptor.sln --verbosity m
   - ps: gitversion /l console /output buildserver
 build_script:
-  - ps: dotnet publish ./src/Wraptor.sln -c "Release" /p:Version=$env:GitVersion_NuGetVersion
-  - ps: dotnet pack ./src/Wraptor.sln -c "Release" /p:Version=$env:GitVersion_NuGetVersion
+  - ps: dotnet publish ./src/Wraptor.sln -c "Release" /p:Version=$env:GitVersion_NuGetVersion /p:Authors="David Szöke"
+  - ps: dotnet pack ./src/Wraptor.sln -c "Release" /p:Version=$env:GitVersion_NuGetVersion  /p:Authors="David Szöke"
 after_build:
   # For once the build has completed
 artifacts:
