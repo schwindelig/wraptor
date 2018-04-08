@@ -2,7 +2,7 @@
 
 **A simple dynamic proxy targeting .net standard 2.0**
 
-[![Build status](https://ci.appveyor.com/api/projects/status/nobrrdmb88sdkcht?svg=true)](https://ci.appveyor.com/project/DavidSzke/wraptor)
+[![Build status](https://ci.appveyor.com/api/projects/status/nobrrdmb88sdkcht?svg=true)](https://ci.appveyor.com/project/DavidSzke/wraptor) [![NuGet](https://img.shields.io/nuget/v/Wraptor.svg)](https://www.nuget.org/packages/Wraptor/)
 
 Wraptor allows you to extend, intercept, modify and redirect calls to interface defined methods on any object. This is achieved by generating a proxy object at run-time that redirects calls to an object of type `IInterceptor`.
 
@@ -14,6 +14,11 @@ Wraptor allows you to extend, intercept, modify and redirect calls to interface 
 Wraptor's IL-Generation and proxy source is based on on John Mikhail's article [Dynamic Proxy Creation Using C# Emit](https://www.codeproject.com/Articles/5511/Dynamic-Proxy-Creation-Using-C-Emit)
 
 ## Getting started
+Install the nuget package either via GUI in Visual Studio or enter the following command in the package manager console:
+```powershell
+Install-Package Wraptor
+```
+
 First, you need to define an implementation of `Wraptor.IInterceptor`. Wraptor provides a handy `Wraptor.InterceptorBase` class you can extend:
 ```csharp
 public class MyInterceptor : InterceptorBase
