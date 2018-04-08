@@ -15,11 +15,12 @@ before_build:
   - ps: gitversion /l console /output buildserver
 build_script:
   - ps: dotnet publish ./src/Wraptor.sln -c "Release" /p:Version=$env:GitVersion_NuGetVersion
+  - ps: dotnet pack ./src/Wraptor.sln -c "Release" /p:Version=$env:GitVersion_NuGetVersion
 after_build:
   # For once the build has completed
 artifacts:
  - path: './src/Wraptor/bin/Release/netstandard2.0/publish'
-   name: Wraptor
+ - path: './src/Wraptor/bin/Release/netstandard2.0/*.nupkg'
 on_finish :
   # any cleanup in here
 deploy: off
