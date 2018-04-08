@@ -260,7 +260,53 @@ Which will result in the following output:
 Hello World - processed by OtherProcessor
 ```
 ### Chaining interceptor
+Since the generated proxies implement the defined interface, it is possible to chain interceptors:
+```csharp
+public interface IProcessor
+{
+    void ProcessMessage(string message);
+}
 
+public class Processor : IProcessor
+{
+    public void ProcessMessage(string message) => Console.WriteLine(message);
+}
+
+public class InterceptorOne : InterceptorBase
+{
+    public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
+    {
+        arguments[0] = arguments[0] + " modified by InterceptorOne";
+        return base.Invoke(implementation, methodInfo, arguments);
+    }
+}
+
+public class InterceptorTwo : InterceptorBase
+{
+    public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
+    {
+        arguments[0] = arguments[0] + " modified by InterceptorTwo";
+        return base.Invoke(implementation, methodInfo, arguments);
+    }
+}
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        var generator = new Generator();
+        var processor = new Processor();
+        var proxy = generator.Generate<IProcessor>(processor, new InterceptorOne());
+        proxy = generator.Generate<IProcessor>(proxy, new InterceptorTwo());
+
+        proxy.ProcessMessage("Hello World");
+    }
+}
+```
+Which generates following output:
+```
+Hello World modified by InterceptorTwo modified by InterceptorOne
+```
 ## Implementation details
 - Information Provider
 - IL generation
