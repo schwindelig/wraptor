@@ -91,7 +91,9 @@ public class MeasureInterceptor : InterceptorBase
 ```
 Another approach could be to have a timer at instance level of the Interceptor and toggle the measuring in the `PreInvoke` and `PostInvoke` methods.
 ### Modifying arguments passed to the method
+The arguments that will or have been used will be passed to all hooks as boxed objects in an array through the `arguments` parameter. To have an effect on the execution of the method, you will have to modify them in either the `PreInvoke` or `Invoke` method.
 
+The following example illustrates the change of the first and only parameter passed to the `Deposit` method:
 ```csharp
 public interface IPerson
 {
@@ -130,7 +132,55 @@ public class Program
     }
 }
 ```
+Which then produces the following output:
+```
+90001
+```
 ### Modifying the return value
+The `Invoke` method provides the result of the original method as a boxed object. You can modify this object before returning which will affect every caller:
+```csharp
+public interface IPerson
+{
+    int Age { get; set; }
+}
+
+public class Person : IPerson
+{
+    public int Age { get; set; }
+}
+
+public class ReturnValueInterceptor : InterceptorBase
+{
+    public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
+    {
+        var result = base.Invoke(implementation, methodInfo, arguments);
+
+        if (methodInfo.Name.Equals($"get_{nameof(IPerson.Age)}", StringComparison.InvariantCultureIgnoreCase))
+        {
+            result = (int)result + 17;
+        }
+
+        return result;
+    }
+}
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        var generator = new Generator();
+        var interceptor = new ReturnValueInterceptor();
+        var alice = new Person { Age = 25 };
+        var proxy = generator.Generate<IPerson>(alice, interceptor);
+
+        Console.WriteLine(proxy.Age);
+    }
+}
+```
+Which will result in the following output:
+```
+42
+```
 ### Surpressing method invocations
 ### Redirecting method invocations
 ### Chaining interceptor
