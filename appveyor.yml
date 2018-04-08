@@ -13,7 +13,7 @@ assembly_info:
 before_build:
   - cmd: dotnet --version
   - cmd: dotnet restore ./src/Wraptor.sln --verbosity m
-  - ps: gitversion /l console /output buildserver /updateAssemblyInfo
+  - ps: gitversion /l console /output buildserver
 build_script:
   - cmd: dotnet publish ./src/Wraptor.sln -c "Release"
 after_build:
