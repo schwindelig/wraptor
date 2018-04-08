@@ -191,18 +191,12 @@ public interface IProcessor
 
 public class Processor : IProcessor
 {
-    public void BroadcastMessage(string message)
-    {
-        Console.WriteLine(message);
-    }
+    public void BroadcastMessage(string message) => Console.WriteLine(message);
 }
 
 public class Suppressor : InterceptorBase
 {
-    public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
-    {
-        return null;
-    }
+    public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments) => null;
 }
 
 public class Program
