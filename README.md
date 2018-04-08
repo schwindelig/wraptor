@@ -11,7 +11,7 @@ Wraptor allows you to extend, intercept, modify and redirect calls to interface 
 - `object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)`
 - `void PostInvoke(object implementation, MethodInfo methodInfo, object[] arguments, object returnValue)`
 
-Wraptor's IL-Generation and proxy source is based on on John Mikhail's article [Dynamic Proxy Creation Using C# Emit](https://www.codeproject.com/Articles/5511/Dynamic-Proxy-Creation-Using-C-Emit)
+Wraptor's IL-Generation and proxy source was inspired by John Mikhail's article [Dynamic Proxy Creation Using C# Emit](https://www.codeproject.com/Articles/5511/Dynamic-Proxy-Creation-Using-C-Emit)
 
 ## Getting started
 Install the nuget package either via GUI in Visual Studio or enter the following command in the package manager console:
