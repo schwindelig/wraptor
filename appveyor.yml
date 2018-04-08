@@ -4,17 +4,17 @@ branches:
   only:
   - master
 init:
-  - cmd: git config --global core.autocrlf true
+  - ps: git config --global core.autocrlf true
 install:
   - choco install gitversion.portable -pre -y
 assembly_info:
   patch: false
 before_build:
-  - cmd: dotnet --version
-  - cmd: dotnet restore ./src/Wraptor.sln --verbosity m
+  - ps: dotnet --version
+  - ps: dotnet restore ./src/Wraptor.sln --verbosity m
   - ps: gitversion /l console /output buildserver
 build_script:
-  - cmd: dotnet publish ./src/Wraptor.sln -c "Release"
+  - ps: dotnet publish ./src/Wraptor.sln -c "Release" /p:Version=%GitVersion_NuGetVersion%
 after_build:
   # For once the build has completed
 artifacts:
