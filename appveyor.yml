@@ -4,7 +4,6 @@ branches:
   only:
   - master
 init:
-  # Good practise, because Windows line endings are different from Unix/Linux ones
   - cmd: git config --global core.autocrlf true
 install:
   - choco install gitversion.portable -pre -y
@@ -21,7 +20,6 @@ after_build:
 artifacts:
  - path: './src/Wraptor/bin/Release/netstandard2.0/publish'
    name: Wraptor
-clone_depth: 1
 on_finish :
   # any cleanup in here
 deploy: off
