@@ -181,8 +181,90 @@ Which will result in the following output:
 ```
 42
 ```
-### Surpressing method invocations
+### Suppressing method invocations
+Since the `Invoke` method controls the flow of execution, the call to the proxied method can be avoided by simply returning early:
+```csharp
+public interface IProcessor
+{
+    void BroadcastMessage(string message);
+}
+
+public class Processor : IProcessor
+{
+    public void BroadcastMessage(string message)
+    {
+        Console.WriteLine(message);
+    }
+}
+
+public class Suppressor : InterceptorBase
+{
+    public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
+    {
+        return null;
+    }
+}
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        var generator = new Generator();
+        var interceptor = new Suppressor();
+        var processor = new Processor();
+        var proxy = generator.Generate<IProcessor>(processor, interceptor);
+
+        proxy.BroadcastMessage("Hello World");
+    }
+}
+```
+The example above will not produce any output at all, as the `Console.WriteLine` statement will never be reached.
+
 ### Redirecting method invocations
+We can therefore also redirect calls to completely different methods, as long as the eventual return type is the same as on the originally called method:
+```csharp
+public interface IProcessor
+{
+    string ProcessMessage(string message);
+}
+
+public class Processor : IProcessor
+{
+    public string ProcessMessage(string message) => $"{message} - normally processed";
+}
+
+public class OtherProcessor
+{
+    public string ProcessMessage(string message) => $"{message} - processed by {this.GetType().Name}";
+}
+
+public class Redirector : InterceptorBase
+{
+    public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
+    {
+        var otherProcessor = new OtherProcessor();
+        return otherProcessor.ProcessMessage((string)arguments[0]);
+    }
+}
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        var generator = new Generator();
+        var interceptor = new Redirector();
+        var processor = new Processor();
+        var proxy = generator.Generate<IProcessor>(processor, interceptor);
+
+        var result = proxy.ProcessMessage("Hello World");
+        Console.WriteLine(result);
+    }
+}
+```
+Which will result in the following output:
+```
+Hello World - processed by OtherProcessor
+```
 ### Chaining interceptor
 
 ## Implementation details
