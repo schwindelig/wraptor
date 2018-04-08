@@ -20,4 +20,12 @@ artifacts:
  - path: './src/Wraptor/bin/Release/*.nupkg'
 on_finish :
   # any cleanup in here
-deploy: off
+deploy:
+- provider: NuGet
+  name: production
+  api_key:
+    secure: svK45XJd2tQ6BGpxRNBnUowwe0uiy4cZwD9e2EKyOqW6u3NDK4mX/JJ0UPi25S+I
+  on:
+    branch: master
+    appveyor_repo_tag: true
+    
