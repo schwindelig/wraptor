@@ -215,7 +215,7 @@ public class Program
 The example above will not produce any output at all, as the `Console.WriteLine` statement will never be reached.
 
 ### Redirecting method invocations
-We can therefore also redirect calls to completely different methods, as long as the eventual return type is the same as on the originally called method:
+We can therefore also redirect calls to completely different methods, as long as the underlying type of the return value is the same as on the originally called method:
 ```csharp
 public interface IProcessor
 {
