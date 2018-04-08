@@ -20,7 +20,7 @@ after_build:
   # For once the build has completed
 artifacts:
  - path: './src/Wraptor/bin/Release/netstandard2.0/publish'
- - path: './src/Wraptor/bin/Release/netstandard2.0/*.nupkg'
+ - path: './src/Wraptor/bin/Release/*.nupkg'
 on_finish :
   # any cleanup in here
 deploy: off
