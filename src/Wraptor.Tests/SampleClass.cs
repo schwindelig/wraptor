@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace Wraptor.Tests
+﻿namespace Wraptor.Tests
 {
     public class SampleClass : ISampleClass
     {
@@ -24,5 +22,13 @@ namespace Wraptor.Tests
         public T1 GetT1<T1, T2>(T1 input1, T2 input2) => input1;
 
         public T2 GetT2<T1, T2>(T1 input1, T2 input2) => input2;
+    }
+
+    public class SampleGenericClass : ISampleGenericClass<int, string>
+    {
+        public string GetCovariantResult(int input)
+        {
+            return input.ToString();
+        }
     }
 }

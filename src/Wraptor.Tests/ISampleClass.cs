@@ -14,4 +14,9 @@
         string GetString1(string input1, string input2);
         string GetString2(string input1, string input2);
     }
+
+    public interface ISampleGenericClass<in TIn, out TOut>
+    {
+        TOut GetCovariantResult(TIn input);
+    }
 }
