@@ -2,7 +2,7 @@
 
 namespace Wraptor.Tests
 {
-    public class UnitTestInterceptor : IInterceptor
+    public class UnitTestInterceptor : InterceptorBase
     {
         public bool PreInvokeHit { get; set; }
 
@@ -10,21 +10,23 @@ namespace Wraptor.Tests
 
         public bool PostInvokeHit { get; set; }
 
-        public void PreInvoke(object implementation, MethodInfo methodInfo, object[] arguments)
+        public override void PreInvoke(object implementation, MethodInfo methodInfo, object[] arguments)
         {
             this.PreInvokeHit = true;
+            base.PreInvoke(implementation, methodInfo, arguments);
         }
 
-        public object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
+        public override object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
         {
             this.InvokeHit = true;
 
-            return methodInfo.Invoke(implementation, arguments);
+            return base.Invoke(implementation, methodInfo, arguments);
         }
 
-        public void PostInvoke(object implementation, MethodInfo methodInfo, object[] arguments, object returnValue)
+        public override void PostInvoke(object implementation, MethodInfo methodInfo, object[] arguments, object returnValue)
         {
             this.PostInvokeHit = true;
+            base.PostInvoke(implementation, methodInfo, arguments, returnValue);
         }
     }
 }

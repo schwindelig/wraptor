@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -154,6 +155,18 @@ namespace Wraptor
                     methodInfo.ReturnType,
                     methodInfo.GetParameters().Select(p => p.ParameterType).ToArray());
 
+                // Check if we have to make the method generic
+                if (methodInfo.IsGenericMethod)
+                {
+                    var genericTypes = methodInfo.GetGenericArguments();
+                    var names = new List<string>();
+                    foreach (var genericType in genericTypes)
+                    {
+                        names.Add(genericType.Name);
+                    }
+                    methodBuilder.DefineGenericParameters(names.ToArray());
+                }
+
                 var ilGenerator = methodBuilder.GetILGenerator();
                 // Locals:
                 // 0: string: Stores the typeIdentifier
@@ -186,10 +199,8 @@ namespace Wraptor
                     ilGenerator.Emit(OpCodes.Ldloc, MethodGenerationDefinition.LocalIndexes.Arguments); // arguments
                     ilGenerator.Emit(OpCodes.Ldc_I4, parameterIndex); // array index
                     ilGenerator.Emit(OpCodes.Ldarg, parameterIndex + 1); // need to add 1 here, as arg 0 is "this"
-                    if (parameterInfos.IsParameterValueType(parameterIndex))
-                    {
-                        ilGenerator.Emit(OpCodes.Box, parameterInfos.GetParameterType(parameterIndex));
-                    }
+                    ilGenerator.Emit(OpCodes.Box, parameterInfos.GetParameterType(parameterIndex));
+
                     ilGenerator.Emit(OpCodes.Stelem_Ref);
                 }
 
@@ -239,11 +250,8 @@ namespace Wraptor
                     // Load the boxed result onto the evaluation stack
                     ilGenerator.Emit(OpCodes.Ldloc, MethodGenerationDefinition.LocalIndexes.ReturnValue);
 
-                    if (returnType.IsValueType)
-                    {
-                        // Unbox value types
-                        ilGenerator.Emit(OpCodes.Unbox_Any, returnType);
-                    }
+                    // Unbox the stuff
+                    ilGenerator.Emit(OpCodes.Unbox_Any, returnType);
                 }
 
                 ilGenerator.Emit(OpCodes.Ret);

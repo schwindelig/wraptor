@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Wraptor
 {
@@ -10,11 +12,29 @@ namespace Wraptor
 
         public virtual object Invoke(object implementation, MethodInfo methodInfo, object[] arguments)
         {
+            if (implementation == null || methodInfo == null) return null;
+
+            // TODO: We might move this to MetaInfoProvider so we don't have to do this for every method invocation
             object result = null;
-            if (implementation != null && methodInfo != null)
+            if (methodInfo.IsGenericMethod)
             {
-               result = methodInfo.Invoke(implementation, arguments);
+                var genericParameterTypes = new List<Type>();
+
+                var parameters = methodInfo.GetParameters();
+                for (var i = 0; i < arguments.Length; i++)
+                {
+                    var parameter = parameters[i];
+
+                    if (!parameter.ParameterType.IsGenericParameter) continue;
+
+                    var argumentType = arguments[i].GetType();
+                    genericParameterTypes.Add(argumentType);
+                }
+
+                methodInfo = methodInfo.MakeGenericMethod(genericParameterTypes.ToArray());
             }
+
+            result = methodInfo.Invoke(implementation, arguments);
 
             return result;
         }
